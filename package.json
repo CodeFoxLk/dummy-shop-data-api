@@ -1,0 +1,25 @@
+{
+  "name": "dummy_shop_data_api",
+  "version": "0.0.1",
+  "description": "REST API with Dummy JSON data for the e-commmerce app development",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeFoxLk/dummy-shop-data-api.git"
+  },
+  "author": "eshan nimesha",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodeFoxLk/dummy-shop-data-api/issues"
+  },
+  "homepage": "https://github.com/CodeFoxLk/dummy-shop-data-api#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19"
+  }
+}
