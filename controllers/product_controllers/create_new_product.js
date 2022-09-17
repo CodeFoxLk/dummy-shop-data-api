@@ -1,9 +1,9 @@
-const { validationResult } = require('express-validator')
-const ProductModel = require('../../models/products')
-const { imageResize } = require('../../utils/image_uploader')
-const { body } = require('express-validator')
+import { validationResult } from 'express-validator'
+import ProductModel from '../../models/products.js'
+import { imageResize } from '../../utils/image_uploader.js'
+import { body } from 'express-validator'
 
-exports.createNewProduct = async (req, res, next) => {
+export async function createNewProduct(req, res, next) {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
@@ -58,7 +58,7 @@ exports.createNewProduct = async (req, res, next) => {
   }
 }
 
-exports.productValidations = [
+export const productValidations = [
   body('title').trim().notEmpty().isLength({ max: 100 }),
   body('description').trim().notEmpty().isLength({ max: 1000 }),
   body('price').notEmpty().isNumeric(),

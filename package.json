@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "REST API with Dummy JSON data for the e-commmerce app development",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",

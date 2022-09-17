@@ -1,8 +1,8 @@
-const multer = require('multer')
-const sharp = require('sharp')
-const { v4: uuidv4 } = require('uuid')
+import multer from 'multer'
+import sharp from 'sharp'
+import { v4 as uuidv4 } from 'uuid'
 
-const fileStorage = multer.diskStorage({
+const fileStorage  = multer.diskStorage({
   destination: (req, file, callBack) => {
     callBack(null, 'images/product_images')
   },
@@ -38,9 +38,9 @@ const resize = async (image, imageWidth) => {
   }
 }
 
-exports.imageResize = resize
+export const imageResize = resize
 
-exports.imageUploader = multer({
+export const imageUploader = multer({
   storage: fileStorage,
   fileFilter: fileFilter,
 }).array('image')

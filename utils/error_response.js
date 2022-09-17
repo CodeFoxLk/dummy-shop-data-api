@@ -7,4 +7,4 @@ const errorResponse = (error , req, res, next) => {
     res.status(statusCode).json({message : error.message})
 }
 
-module.exports = errorResponse
+export default errorResponse
