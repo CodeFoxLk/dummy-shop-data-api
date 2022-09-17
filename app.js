@@ -11,8 +11,6 @@ const authRouter = require('./routers/auth_router')
 
 //utils and helpers
 const errorResponse = require('./utils/error_response')
-// const { fileHandler } = require('./utils/file_handler')
-const { imageUploader } = require('./middlewares/image_uploader')
 
 const app = express()
 
@@ -20,11 +18,11 @@ const app = express()
 app.use(header)
 app.use(bodyParser.json())
 
-//file uploader
-app.use('/image', express.static(path.join(__dirname, 'images')))
-app.use(imageUploader)
+//static paths
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 //routes
+
 app.use(productRouter)
 app.use(authRouter)
 
@@ -40,6 +38,6 @@ mongoose
     //mongoose manage one connection behind the scene. it always provide same connection.
     //therefor we dont have to manage multiple connection creations
     app.listen(3000)
-    console.log(r)
+    console.log('mongoose connected')
   })
   .catch((e) => console.log(e))
