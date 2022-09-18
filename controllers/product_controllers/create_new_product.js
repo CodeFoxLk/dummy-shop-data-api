@@ -1,15 +1,12 @@
-import { validationResult } from 'express-validator'
-import ProductModel from '../../models/products.js'
-import { imageResize } from '../../utils/image_uploader.js'
 import { body } from 'express-validator'
 
-export async function createNewProduct(req, res, next) {
-  const errors = validationResult(req)
+import ProductModel from '../../models/products.js'
+import { imageResize } from '../../utils/image_uploader.js'
+import validationErrorHandler from '../../utils/validation_error_handler.js'
 
-  if (!errors.isEmpty()) {
-    const err = new Error('validation failed')
-    err.statusCode = 422
-    console.log(errors)
+export async function createNewProduct(req, res, next) {
+  const err = validationErrorHandler(req)
+  if (err) {
     return next(err)
   }
 
@@ -44,9 +41,9 @@ export async function createNewProduct(req, res, next) {
     reviews: [
       {
         by: req.body.reviewby,
-        review: req.body.review,
-      },
-    ],
+        review: req.body.review
+      }
+    ]
   })
 
   try {
@@ -58,10 +55,16 @@ export async function createNewProduct(req, res, next) {
   }
 }
 
-export const productValidations = [
-  body('title').trim().notEmpty().isLength({ max: 100 }),
-  body('description').trim().notEmpty().isLength({ max: 1000 }),
-  body('price').notEmpty().isNumeric(),
+export const productCreateValidations = [
+  body('title', 'Title has exceeded maximum length (100 characters)')
+    .trim()
+    .notEmpty()
+    .isLength({ max: 100}),
+  body('description', 'Description has exceeded maximum length (1000 characters)')
+    .trim()
+    .notEmpty()
+    .isLength({ max: 1000 }),
+  body('price', 'An invalid price').notEmpty().isNumeric()
   // body('createdBy')
   //   .notEmpty()
   //   .custom((value, { req }) => {}),

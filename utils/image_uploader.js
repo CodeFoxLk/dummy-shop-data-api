@@ -2,13 +2,13 @@ import multer from 'multer'
 import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
 
-const fileStorage  = multer.diskStorage({
+const fileStorage = multer.diskStorage({
   destination: (req, file, callBack) => {
     callBack(null, 'images/product_images')
   },
   filename: (req, file, callBack) => {
     callBack(null, uuidv4() + '-' + file.originalname)
-  },
+  }
 })
 
 const fileFilter = (req, file, cb) => {
@@ -25,14 +25,15 @@ const fileFilter = (req, file, cb) => {
 
 const resize = async (image, imageWidth) => {
   try {
-    const thumbNailPtah = 'images/product_images/' + 'thumbNail-' + image.filename
+    const thumbNailPtah =
+      'images/product_images/' + 'thumbNail-' + image.filename
     await sharp(image.path)
       .resize({
-        width: imageWidth,
+        width: imageWidth
       })
       .toFile('./' + thumbNailPtah)
 
-     return thumbNailPtah
+    return thumbNailPtah
   } catch (error) {
     console.log(error)
   }
@@ -42,5 +43,5 @@ export const imageResize = resize
 
 export const imageUploader = multer({
   storage: fileStorage,
-  fileFilter: fileFilter,
+  fileFilter: fileFilter
 }).array('image')

@@ -1,14 +1,14 @@
 import express from 'express'
 const router = express.Router()
-import { createNewProduct, productValidations,} from '../controllers/product_controllers/create_new_product.js'
+import { createNewProduct, productCreateValidations} from '../controllers/product_controllers/create_new_product.js'
 import { imageUploader } from '../utils/image_uploader.js'
+import singleProduct from '../controllers/product_controllers/get_single_product.js'
+import { getAllProducts, getAllValidations } from '../controllers/product_controllers/get_all_products.js'
 
-//const getAllProducts = require('../controllers/product_controllers/get_all_products')
 
 
-// const singleProduct = require('../controllers/product_controllers/get_single_product')
 // const updateProduct = require('../controllers/product_controllers/update_product')
-// const isAuth = require('../middlewares/is_auth')
+import isAuth from '../middlewares/is_auth.js'
 
 
 // const multer = require('multer')
@@ -16,13 +16,19 @@ import { imageUploader } from '../utils/image_uploader.js'
 
 /////////////////
 
-// router.get('/all_products', getAllProducts)
-// router.get('/product/:productId', isAuth, singleProduct)
+router.get('/all_products',getAllValidations, getAllProducts)
+
 // router.put('/update_product/:productId', updateProduct)
+
+
+//get a product
+router.get('/product/:productId', singleProduct)
+
+//create a product
 router.post(
   '/create_product',
   imageUploader,
-  productValidations,
+  productCreateValidations,
   createNewProduct
 )
 
