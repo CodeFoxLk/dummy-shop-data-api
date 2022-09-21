@@ -35,7 +35,7 @@ const resize = async (image, imageWidth) => {
 
     return thumbNailPtah
   } catch (error) {
-    console.log(error)
+    console.log('resize', error)
   }
 }
 

@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 
-const productSchema = new Schema(
+const ProductSchema = new Schema(
   {
     title: {
       type: String,
@@ -15,7 +15,7 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    imageUrl: {
+    images: {
       type: Array,
       required: true,
     },
@@ -35,7 +35,11 @@ const productSchema = new Schema(
       type: String,
       required: false,
     },
-    category: {
+    superCategory: {
+      type: String,
+      required: false,
+    },
+    subCategory: {
       type: String,
       required: false,
     },
@@ -47,6 +51,10 @@ const productSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    category : {
+      type: String,
+      require : true
     },
     reviews: [
       {
@@ -65,4 +73,4 @@ const productSchema = new Schema(
   }
 );
 
-export default model('Products', productSchema)
+export default model('Products', ProductSchema)

@@ -1,9 +1,11 @@
-// const express = require("express")
-// const signUp = require("../controllers/auth/sign_up")
-// const login = require("../controllers/auth/log_in")
-// const authRouter = express.Router()
+import { Router } from "express"
+import {signUp, signupValidations} from "../controllers/auth/sign_up.js"
+import { login, loginValidations } from "../controllers/auth/log_in.js"
 
-// authRouter.post('/signup', signUp)
-// authRouter.post('/login', login)
 
-// module.exports = authRouter
+const authRouter = Router()
+
+authRouter.post('/signup', signupValidations, signUp)
+authRouter.post('/login', loginValidations, login)
+
+export default authRouter

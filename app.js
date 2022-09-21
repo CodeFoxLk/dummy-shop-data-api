@@ -7,15 +7,16 @@ import corsHeader from './utils/cors_header.js'
 
 //routers
 import productRouter from './routers/product_router.js'
-//const authRouter = require('./routers/auth_router')
+import authRouter from './routers/auth_router.js'
 
 //utils and helpers
-import errorResponse from './utils/error_response.js'
+import errorResponse from './utils/error_handlers/error_response.js'
 
 const app = express()
 
 //for CORS
 app.use(corsHeader)
+
 app.use(bodyParser.json())
 
 //static paths
@@ -24,7 +25,7 @@ app.use('/images', express.static(dirname('images')))
 //routes
 
 app.use(productRouter)
-//app.use(authRouter)
+app.use(authRouter)
 
 //errorHandler
 app.use(errorResponse)

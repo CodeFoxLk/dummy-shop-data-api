@@ -1,41 +1,55 @@
-// const bcrypt = require('bcryptjs')
-// const { validationResult } = require("express-validator")
-// const UserModel = require('../../models/user')
+import bcrypt from 'bcryptjs'
+import { body } from 'express-validator'
+import {
+  ErrorMessages,
+  SuccessResponseMessages
+} from '../../const/error_messages.js'
+import UserModel from '../../models/user.js'
+import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
+import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
 
+export const signUp = async (req, res, next) => {
+  const err = validationErrorHandler(req)
+  if (err) {
+    return next(err)
+  }
 
-// const signUp = async (req, res, next) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       const error = new Error('Validation failed.');
-//       error.statusCode = 422;
-//       error.data = errors.array();
-//       next(error);
-//     }
-//     const email = req.body.email;
-//     const name = req.body.name;
-//     const password = req.body.password;
+  const email = req.body.email
+  const name = req.body.name
+  const password = req.body.password
 
-//     try {
-//        const encryptedPassword = await bcrypt.hash(password, 12) 
-//        const user = await new UserModel({
-//         email : email,
-//         name:name,
-//         password : encryptedPassword
-//        }).save();
+  try {
+    const encryptedPassword = await bcrypt.hash(password, 12)
+    await new UserModel({
+      email: email,
+      name: name,
+      password: encryptedPassword
+    }).save()
 
-//        res.status(201).json({message : 'new user signup'});
-       
-//     } catch (error) {
-//         console.log(error)
-//         if(error.code === 1100){
-//             error.message = 'This email is already registered'
-//             error.statusCode = 409;
-//         }else{
-//             error.statusCode = 500;
-//         }
-        
-//         next(error);
-//     }
-// }
+    res
+      .status(201)
+      .json({ message: SuccessResponseMessages.NEW_USER_REGISTERED })
+  } catch (error) {
+    if (error.code == 11000) {
+      error.message = ErrorMessages.ALREADY_REGISTERED_EMAIL
+      error.statusCode = 409
+    } else {
+      const e = mongooseErrorHandler(error)
+      return next(e)
+    }
 
-// module.exports = signUp
+    next(error)
+  }
+}
+
+export const signupValidations = [
+  body('email', ErrorMessages.INVALID_EMAIL).isEmail(),
+  body('name', ErrorMessages.INVALID_NAME).notEmpty(),
+  body('password', ErrorMessages.INVALID_PASSWORD).isStrongPassword({
+    minLength: 5,
+    minNumbers: 1,
+    minLowercase: 1,
+    minUppercase: 1,
+    minSymbols: 0
+  })
+]

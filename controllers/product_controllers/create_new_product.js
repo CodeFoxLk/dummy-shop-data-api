@@ -1,8 +1,9 @@
-import { body } from 'express-validator'
-
+import { body, check } from 'express-validator'
+import { ErrorMessages } from '../../const/error_messages.js'
 import ProductModel from '../../models/products.js'
 import { imageResize } from '../../utils/image_uploader.js'
-import validationErrorHandler from '../../utils/validation_error_handler.js'
+import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
+import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 
 export async function createNewProduct(req, res, next) {
   const err = validationErrorHandler(req)
@@ -13,7 +14,7 @@ export async function createNewProduct(req, res, next) {
   let images = []
 
   if (!req.file && !req.files) {
-    const err = new Error('No image provided')
+    const err = new Error(ErrorMessages.IMAGES_NOT_PROVIDED)
     err.statusCode = 422
     return next(err)
   }
@@ -29,7 +30,7 @@ export async function createNewProduct(req, res, next) {
   const product = new ProductModel({
     title: req.body.title,
     description: req.body.description,
-    imageUrl: images,
+    images: images,
     thumbNail: thumbnailPath,
     price: req.body.price,
     discount: req.body.discount,
@@ -49,22 +50,24 @@ export async function createNewProduct(req, res, next) {
   try {
     const result = await product.save()
     res.status(201).json(result)
-  } catch (err) {
-    err.statusCode = 500
-    next(err)
+  } catch (e) {
+    const error = mongooseErrorHandler(e)
+    next(error)
   }
 }
 
 export const productCreateValidations = [
-  body('title', 'Title has exceeded maximum length (100 characters)')
+  body('title', ErrorMessages.TITLE_MAX_LENGTH_100)
     .trim()
     .notEmpty()
-    .isLength({ max: 100}),
-  body('description', 'Description has exceeded maximum length (1000 characters)')
+    .isLength({ max: 100 }),
+  body('description', ErrorMessages.DESCRIPTION_MAX_LENGTH)
     .trim()
     .notEmpty()
     .isLength({ max: 1000 }),
-  body('price', 'An invalid price').notEmpty().isNumeric()
+  body('price', ErrorMessages.INVALID_PRICE).notEmpty().isNumeric(),
+  body('category', ErrorMessages.EMPTY_CATEGORY).notEmpty()
+
   // body('createdBy')
   //   .notEmpty()
   //   .custom((value, { req }) => {}),
