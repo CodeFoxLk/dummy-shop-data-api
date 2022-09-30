@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { ErrorMessages } from '../const/error_messages.js'
+import { ErrorMessages } from '../const/response_messages.js'
 import { JWTSECRETKEY } from '../const/secrets_and_keys.js'
 
 export default async (req, res, next) => {

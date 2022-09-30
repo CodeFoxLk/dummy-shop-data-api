@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken'
 import UserModel from '../../models/user.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
-import { ErrorMessages } from '../../const/error_messages.js'
+import { ErrorMessages } from '../../const/response_messages.js'
 import { JWTSECRETKEY } from '../../const/secrets_and_keys.js'
+import responseData from '../../utils/response_message.js'
 
 
 export const login = async (req, res, next) => {
@@ -41,7 +42,8 @@ export const login = async (req, res, next) => {
       JWTSECRETKEY,
       { expiresIn: '1h' }
     )
-    res.status(200).json({ token: token})
+    
+    res.status(200).json({token: token})
   } catch (e) {
     const error = mongooseErrorHandler(e)
     next(error)

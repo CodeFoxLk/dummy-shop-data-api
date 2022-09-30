@@ -2,7 +2,7 @@ import ProductModel from '../../models/products.js'
 import { query } from 'express-validator'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
-import { ErrorMessages } from '../../const/error_messages.js'
+import { ErrorMessages } from '../../const/response_messages.js'
 
 export const filterProducts = async (req, res, next) => {
   const filters = {}

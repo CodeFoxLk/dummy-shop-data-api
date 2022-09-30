@@ -3,7 +3,7 @@ import validationErrorHandler from '../../utils/error_handlers/validation_error_
 import Orders from '../../models/orders.js'
 import Products from '../../models/products.js'
 import { body, check } from 'express-validator'
-import { ErrorMessages } from '../../const/error_messages.js'
+import { ErrorMessages } from '../../const/response_messages.js'
 
 export const purchaseProducts = async (req, res, next) => {
   const products = req.body.products

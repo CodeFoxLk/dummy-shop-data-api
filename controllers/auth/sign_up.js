@@ -3,10 +3,11 @@ import { body } from 'express-validator'
 import {
   ErrorMessages,
   SuccessResponseMessages
-} from '../../const/error_messages.js'
+} from '../../const/response_messages.js'
 import UserModel from '../../models/user.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
+import responseData from '../../utils/response_message.js'
 
 export const signUp = async (req, res, next) => {
   const err = validationErrorHandler(req)
@@ -26,9 +27,12 @@ export const signUp = async (req, res, next) => {
       password: encryptedPassword
     }).save()
 
-    res
-      .status(201)
-      .json({ 'message': SuccessResponseMessages.UPDATE_SUCESS })
+    res.status(201).json(
+      responseData({
+        statusCode: 201,
+        data: { message: SuccessResponseMessages.NEW_USER_REGISTERED }
+      })
+    )
   } catch (error) {
     if (error.code == 11000) {
       error.message = ErrorMessages.ALREADY_REGISTERED_EMAIL

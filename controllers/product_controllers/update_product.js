@@ -2,7 +2,7 @@ import ProductModel from '../../models/products.js'
 import { promises } from 'fs'
 import { imageResize } from '../../utils/image_uploader.js'
 import { body } from 'express-validator'
-import { ErrorMessages, SuccessResponseMessages } from '../../const/error_messages.js'
+import { ErrorMessages, SuccessResponseMessages } from '../../const/response_messages.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 

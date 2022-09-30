@@ -1,4 +1,4 @@
-import { SuccessResponseMessages } from '../../const/error_messages.js'
+import { SuccessResponseMessages } from '../../const/response_messages.js'
 import UserSchema from '../../models/user.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 

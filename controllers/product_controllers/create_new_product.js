@@ -1,5 +1,5 @@
 import { body, check } from 'express-validator'
-import { ErrorMessages } from '../../const/error_messages.js'
+import { ErrorMessages } from '../../const/response_messages.js'
 import ProductModel from '../../models/products.js'
 import { imageResize } from '../../utils/image_uploader.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
@@ -19,12 +19,18 @@ export async function createNewProduct(req, res, next) {
     return next(err)
   }
 
-  const thumbnailPath = await imageResize(req.files[0], 250) // create thumbnail
+  const thumbnailPath = await imageResize(req.files[0], 250, 'thumbnail') // create thumbnail
 
+  let imagePromises = [];
+  
   if (req.files) {
-    images = req.files.map((image) => {
-      return image.path
+    imagePromises = req.files.map((image) => {
+      const resizedImagePath = imageResize(image, 500, 'product', true)
+      return resizedImagePath
     })
+
+    images = await Promise.all(imagePromises)
+   
   }
 
   const product = new ProductModel({

@@ -19,8 +19,13 @@ export const ErrorMessages = {
 }
 
 export const SuccessResponseMessages = {
-    'NEW_USER_REGISTERED' : 'New user signup success',
+    'NEW_USER_REGISTERED' : 'User signup success',
     'UPDATE_SUCESS' : 'Update sucess',
-    'SUCESS' : 'Update sucess'
+    'SUCESS' : 'Update sucess',
+    'CART_ITEM_DELETED' : 'Cart items deleted',
+    'CART_UPDATED' : 'Cart updated',
+    'REVIEW_ADDED' : 'Review added',
+    'REVIEW_DELETED' : 'Review deleted'
 }
+
 

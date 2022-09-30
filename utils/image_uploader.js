@@ -1,6 +1,8 @@
 import multer from 'multer'
 import sharp from 'sharp'
 import { v4 as uuidv4 } from 'uuid'
+import fs from 'fs';
+
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, callBack) => {
@@ -12,6 +14,7 @@ const fileStorage = multer.diskStorage({
 })
 
 const fileFilter = (req, file, cb) => {
+
   if (
     file.mimetype === 'image/png' ||
     file.mimetype === 'image/jpg' ||
@@ -23,17 +26,23 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
-const resize = async (image, imageWidth) => {
+const resize = async (image, imageWidth, fileNamePrefix, deleteImage) => {
   try {
-    const thumbNailPtah =
-      'images/product_images/' + 'thumbNail-' + image.filename
+    const resizedImage = 'images/product_images/' + fileNamePrefix + image.filename
+    
     await sharp(image.path)
       .resize({
         width: imageWidth
       })
-      .toFile('./' + thumbNailPtah)
+      .toFile('./' + resizedImage)
 
-    return thumbNailPtah
+    if(deleteImage){
+      fs.unlinkSync(image.path)
+    }  
+
+    return resizedImage
+
+
   } catch (error) {
     console.log('resize', error)
   }
