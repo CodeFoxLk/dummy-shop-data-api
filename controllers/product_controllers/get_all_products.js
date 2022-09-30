@@ -14,7 +14,9 @@ export const getAllProducts = async (req, res, next) => {
 
     const productCount = await ProductModel.count().exec()
     const page = parseInt(req.query.page || 1)
-    const countPerPage = parseInt(req.query.count || 10)
+    const countPerPage = parseInt(req.query.count) // if 0, [const getAllValidations] will add a default count
+
+    console.log(req.query.count)
 
     const allProducts = await ProductModel.find()
       

@@ -79,7 +79,7 @@ export const getAllValidations = [
   query('count', ErrorMessages.INVALID_PRODUCT_COUNT).customSanitizer(
     (value, { req }) => {
       if (isNaN(value)) {
-        return 20 //If the maximum count is not a number,
+        return 10 //If the maximum count is not a number,
       }
       return req.query.count
     }

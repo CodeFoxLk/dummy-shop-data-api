@@ -16,8 +16,7 @@ const prapareProduct = (product) => {
     product.saving = saving
     product.isDiscountAvalable = isDiscountAvalable
 
-    console.log(product)
-
+   
     return product
 
 }
