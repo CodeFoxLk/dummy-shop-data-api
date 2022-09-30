@@ -21,8 +21,6 @@ import orderRouter from './routers/order_router.js'
 import errorResponse from './utils/error_handlers/error_response.js'
 
 
-
-
 const app = express()
 
 //for CORS
@@ -31,7 +29,7 @@ app.use(corsHeader)
 app.use(bodyParser.json())
 
 //static paths
-app.use('/images', express.static(dirname('images')))
+app.use('/images', express.static('images'))
 
 //routes
 
