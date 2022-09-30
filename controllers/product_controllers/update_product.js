@@ -2,7 +2,7 @@ import ProductModel from '../../models/products.js'
 import { promises } from 'fs'
 import { imageResize } from '../../utils/image_uploader.js'
 import { body } from 'express-validator'
-import { ErrorMessages } from '../../const/error_messages.js'
+import { ErrorMessages, SuccessResponseMessages } from '../../const/error_messages.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 
@@ -13,7 +13,7 @@ export const updateProduct = async (req, res, next) => {
   }
 
   const productId = req.params.productId
-  
+
   const updateProduct = {
     title: req.body.title,
     description: req.body.description,
@@ -21,22 +21,12 @@ export const updateProduct = async (req, res, next) => {
     discount: req.body.discount,
     rating: req.body.rating,
     brand: req.body.brand,
-    category: req.body.category,
+    subCategory: req.body.sub_category,
+    superCategory: req.body.super_category,
     keywords: req.body.keywords
   }
 
-  const oldProduct = await ProductModel.findById(productId).exec()
-
-  // remove old images
-  await _removeImage(oldProduct)
-  // remove old thumbnail
-  if (oldProduct.thumbNail != null) {
-    try {
-      await promises.unlink(oldProduct.thumbNail)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  //const oldProduct = await ProductModel.findById(productId).exec()
 
   // is if new image file available in the request
   let imageAvailable = req.files ? true : false
@@ -53,32 +43,47 @@ export const updateProduct = async (req, res, next) => {
     }
   }
 
+  let oldProduct
   try {
     // update product
-    const product = await ProductModel.findByIdAndUpdate(
+    oldProduct = await ProductModel.findByIdAndUpdate(
       productId,
       updateProduct,
       { new: true }
     ).exec()
-    res.status(200).json(product)
+    res.status(200).json({
+      'message' : SuccessResponseMessages.UPDATE_SUCESS
+    })
   } catch (e) {
     const error = mongooseErrorHandler(e)
     next(error)
   }
+
+  // remove old images
+  await _removeImage(oldProduct)
+  // remove old thumbnail
+  if (oldProduct.thumbNail != null) {
+    try {
+      await promises.unlink(oldProduct.thumbNail)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 async function _removeImage(oldProduct) {
-  const promises = []
-  // remove old images
-  oldProduct.images.forEach(async (imagePath) => {
-    try {
-      await promises.unlink(imagePath)
-      promises.push(imagePath)
-    } catch (error) {
-      console.log('Old images not removed' + productId)
-    }
+  let imageRemovePromise = new Promise(function (resolve, reject) {
+    oldProduct.images.forEach(async (imagePath) => {
+      try {
+        await promises.unlink(imagePath)
+      } catch (error) {
+        console.log('Old images not removed ' + imagePath)
+        reject(false)
+      }
+    })
+    resolve(true)
   })
-  return Promise.all(promises) // <-- This is where we await everything.
+  return imageRemovePromise
 }
 
 // const _removeImage = (filePath) => {
@@ -95,8 +100,8 @@ export const productUpdateValidations = [
     .optional()
     .trim()
     .isLength({ max: 1000 }),
-  body('price', ErrorMessages.INVALID_PRICE).optional().isNumeric(),
-  body('category', ErrorMessages.EMPTY_CATEGORY).optional().notEmpty()
+  body('super_category', ErrorMessages.EMPTY_CATEGORY).optional().notEmpty(),
+  body('sub_category', ErrorMessages.EMPTY_CATEGORY).optional().notEmpty()
 
   // body('createdBy')
   //   .notEmpty()

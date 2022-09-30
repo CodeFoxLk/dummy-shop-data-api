@@ -13,9 +13,15 @@ export default async (req, res, next) => {
   const token = authHeader.split(' ')[1]
   console.log(token)
   let decodedToken
+
   try {
     decodedToken = jwt.verify(token, JWTSECRET)
   } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      const error = new Error(ErrorMessages.TOKEN_EXPIRED)
+      error.statusCode = 401
+      return next(error)
+    }
     err.statusCode = 500
     return next(err)
   }
@@ -25,5 +31,6 @@ export default async (req, res, next) => {
     return next(error)
   }
   req.userId = decodedToken.userId
+  //req.userId = '631ccbb5b3d0f6d49a96f0b7'
   next()
 }

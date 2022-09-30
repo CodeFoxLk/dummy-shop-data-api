@@ -34,16 +34,17 @@ export async function createNewProduct(req, res, next) {
     thumbNail: thumbnailPath,
     price: req.body.price,
     discount: req.body.discount,
-    rating: req.body.rating,
+    rating: req.body.rating ?? 0,
     brand: req.body.brand,
-    category: req.body.category,
+    subCategory: req.body.sub_category,
+    superCategory: req.body.super_category,
     keywords: req.body.keywords,
     createdBy: req.body.userId,
     reviews: [
-      {
-        by: req.body.reviewby,
-        review: req.body.review
-      }
+      // {
+      //   by: req.body.reviewby,
+      //   review: req.body.review
+      // }
     ]
   })
 
@@ -66,7 +67,8 @@ export const productCreateValidations = [
     .notEmpty()
     .isLength({ max: 1000 }),
   body('price', ErrorMessages.INVALID_PRICE).notEmpty().isNumeric(),
-  body('category', ErrorMessages.EMPTY_CATEGORY).notEmpty()
+  body('super_category', ErrorMessages.EMPTY_CATEGORY).notEmpty(),
+  body('sub_category', ErrorMessages.EMPTY_CATEGORY).notEmpty()
 
   // body('createdBy')
   //   .notEmpty()

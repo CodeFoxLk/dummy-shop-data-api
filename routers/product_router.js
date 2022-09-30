@@ -16,20 +16,28 @@ import {
   productUpdateValidations
 } from '../controllers/product_controllers/update_product.js'
 
-//only for update product and handle form data
-//body parser is not handling for data. therefor we need to use multer
-//import multer from 'multer';
-
-// const updateProduct = require('../controllers/product_controllers/update_product')
 import isAuth from '../middlewares/is_auth.js'
+import { filterProducts } from '../controllers/product_controllers/filter_products.js'
+import { addReview, validateReview } from '../controllers/reviews/add_review.js'
+import { deleteReview } from '../controllers/reviews/delete_review.js'
 
 //get All Categories
 router.get('/all_categories', getAllCategories)
 
 //get all producta
-router.get('/all_products', getAllValidations, getAllProducts)
+router.get('/products', getAllValidations, getAllProducts)
 
-router.put('/update_product/:productId', productUpdateValidations, imageUploader, updateProduct)
+//get by category
+router.get('/products/filter', getAllValidations, filterProducts)
+
+//only for update product and handle form data
+//body parser is not handling formdata. therefor we need to use multer im imageUploaded.
+router.put(
+  '/update_product/:productId',
+  imageUploader,
+  productUpdateValidations,
+  updateProduct
+)
 
 //get a product
 router.get('/product/:productId', singleProduct)
@@ -37,9 +45,17 @@ router.get('/product/:productId', singleProduct)
 //create a product
 router.post(
   '/create_product',
+
   imageUploader,
   productCreateValidations,
   createNewProduct
 )
+
+//add productReview
+router.post('/product/review/:productId', isAuth, validateReview, addReview)
+//delete productReview
+router.delete('/product/:productId/delete_review/:reviewId', isAuth, deleteReview)
+//update productReview
+//router.put('/product/:productId/review/:reviewId', deleteReview)
 
 export default router

@@ -1,76 +1,81 @@
-import { Schema, model } from 'mongoose';
-
+import { Schema, model } from 'mongoose'
 
 const ProductSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: true
     },
     description: {
       type: String,
-      required: true,
+      required: true
     },
     thumbNail: {
       type: String,
-      required: true,
+      required: true
     },
     images: {
       type: Array,
-      required: true,
+      required: true
     },
     price: {
       type: Number,
-      required: true,
+      required: true
     },
     discount: {
       type: Number,
-      required: false,
+      required: false
     },
     rating: {
       type: Number,
-      required: false,
+      required: false
     },
     brand: {
       type: String,
-      required: false,
+      required: false
     },
     superCategory: {
       type: String,
-      required: false,
+      required: false
     },
     subCategory: {
       type: String,
-      required: false,
+      required: false
     },
     keywords: {
       type: Array,
-      required: false,
+      required: false
     },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: true
     },
-    category : {
-      type: String,
-      require : true
-    },
+    // category: {
+    //   type: String,
+    //   require: true
+    // },
     reviews: [
       {
         by: {
           type: Schema.Types.ObjectId,
-          ref: 'User',
+          ref: 'User'
         },
         review: {
-          type: String,
+          type: String
         },
-      },
-    ],
+        rating : {
+          type : Number
+        }
+      }
+    ]
   },
   {
-    timestamps: true,
+    timestamps: true
   }
-);
+)
+
+//search fields
+ProductSchema.index({title: 'text', keywords: 'text'});
 
 export default model('Products', ProductSchema)

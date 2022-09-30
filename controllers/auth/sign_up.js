@@ -28,7 +28,7 @@ export const signUp = async (req, res, next) => {
 
     res
       .status(201)
-      .json({ message: SuccessResponseMessages.NEW_USER_REGISTERED })
+      .json({ 'message': SuccessResponseMessages.UPDATE_SUCESS })
   } catch (error) {
     if (error.code == 11000) {
       error.message = ErrorMessages.ALREADY_REGISTERED_EMAIL

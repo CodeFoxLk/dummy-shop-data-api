@@ -1,47 +1,46 @@
 import { Schema, model } from 'mongoose'
 
-const UserSchema = new Schema(
+const OrderSchema = new Schema(
   {
-    email: {
-      type: String,
-      required: true,
-      unique: true
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     },
-    password: {
+    address: {
       type: String,
       required: true
     },
-    name: {
+    mobileNumber: {
       type: String,
       required: true
-    },
-    status: {
-      type: String,
-      default: 'active'
     },
     products: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Products'
-      }
-    ],
-    cart: [
       {
         product: {
           type: Schema.Types.ObjectId,
           ref: 'Products',
           required: true
         },
-        qty: {
+        puchasedPrice: {
+          type: Number,
+          required: true
+        },
+        discounted: {
+          type: Number,
+          required: true
+        },
+        netPuchasedPrice: {
           type: Number,
           required: true
         }
       }
     ]
   },
+
   {
     timestamps: true
   }
 )
 
-export default model('User', UserSchema)
+export default model('Orders', OrderSchema)

@@ -8,9 +8,12 @@ import corsHeader from './utils/cors_header.js'
 //routers
 import productRouter from './routers/product_router.js'
 import authRouter from './routers/auth_router.js'
+import userRouter from './routers/user_router.js'
+import orderRouter from './routers/order_router.js'
 
 //utils and helpers
 import errorResponse from './utils/error_handlers/error_response.js'
+
 
 const app = express()
 
@@ -26,6 +29,8 @@ app.use('/images', express.static(dirname('images')))
 
 app.use(productRouter)
 app.use(authRouter)
+app.use(userRouter)
+app.use(orderRouter)
 
 //errorHandler
 app.use(errorResponse)

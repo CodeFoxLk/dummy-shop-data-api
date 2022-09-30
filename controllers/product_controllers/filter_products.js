@@ -3,34 +3,64 @@ import { query } from 'express-validator'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
 import { ErrorMessages } from '../../const/error_messages.js'
-import prapareProduct from './prapare_product.js'
 
-export const getAllProducts = async (req, res, next) => {
+export const filterProducts = async (req, res, next) => {
+  const filters = {}
+  const sort = {}
+
+  if (req.query.sub_category) {
+    filters.subCategory = req.query.sub_category
+  }
+  if (req.query.super_category) {
+    filters.super_category = req.query.super_category
+  }
+  if (req.query.less_than_price) {
+    filters.price = { $lt: req.query.less_than_price }
+  }
+  if (req.query.greater_than_price) {
+    filters.price = { $gt: req.query.greater_than_price }
+  }
+  if (req.query.search) {
+    filters.$text = { $search: req.query.search }
+   // filters.keywords = { $in : req.query.search}
+  }
+
+  console.log(filters)
+
+  const sortQuery = req.query.sort
+
+  switch (sortQuery) {
+    case 'latest':
+      sort.createdAt = -1
+      break
+    case 'lowprice':
+      sort.price = 1
+      break
+    case 'highprice':
+      sort.price = -1
+      break
+    default:
+      sort.createdAt = -1
+      break
+  }
+
   try {
     const err = validationErrorHandler(req)
     if (err) {
       return next(err)
     }
 
-    const productCount = await ProductModel.count().exec()
     const page = parseInt(req.query.page || 1)
     const countPerPage = parseInt(req.query.count || 10)
 
-    const allProducts = await ProductModel.find()
-      
-      .sort({ createdAt: -1 })
+    const allproducts = await ProductModel.find(filters)
+      .select('-__v')
+      .sort(sort)
       .skip((page - 1) * countPerPage)
       .limit(countPerPage)
-      .lean()
-      .select('-__v -reviews')
       .exec()
 
-    const allPraparedProducts = allProducts.map((product) =>
-      prapareProduct(product)
-    )
-
-    
-    res.status(200).json(allPraparedProducts)
+    res.status(200).json(allproducts)
   } catch (e) {
     const error = mongooseErrorHandler(e)
     return next(error)

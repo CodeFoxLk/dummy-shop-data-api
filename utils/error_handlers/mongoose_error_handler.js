@@ -1,8 +1,10 @@
 function mongooseErrorHandler(mongooseErr) {
+  console.log(mongooseErr)
   const error = new Error()
   error.statusCode = mongooseErr.statusCode
-  error._message = mongooseErr.message
+  error.message = mongooseErr.message
   error.errors = []
+  
   for (var e in mongooseErr.errors) {
     error.errors.push(e + ' - ' + mongooseErr.errors[e])
   }
