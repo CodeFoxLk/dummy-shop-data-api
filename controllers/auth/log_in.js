@@ -5,7 +5,7 @@ import UserModel from '../../models/user.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
 import { ErrorMessages } from '../../const/error_messages.js'
-import { JWTSECRET } from '../../const/secrets_and_keys.js'
+import { JWTSECRETKEY } from '../../const/secrets_and_keys.js'
 
 
 export const login = async (req, res, next) => {
@@ -38,7 +38,7 @@ export const login = async (req, res, next) => {
         email: loadedUser.email,
         userId: loadedUser._id.toString(),
       },
-      JWTSECRET,
+      JWTSECRETKEY,
       { expiresIn: '1h' }
     )
     res.status(200).json({ token: token})

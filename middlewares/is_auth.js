@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { ErrorMessages } from '../const/error_messages.js'
-import { JWTSECRET } from '../const/secrets_and_keys.js'
+import { JWTSECRETKEY } from '../const/secrets_and_keys.js'
 
 export default async (req, res, next) => {
   const authHeader = req.get('Authorization')
@@ -15,7 +15,7 @@ export default async (req, res, next) => {
   let decodedToken
 
   try {
-    decodedToken = jwt.verify(token, JWTSECRET)
+    decodedToken = jwt.verify(token, JWTSECRETKEY)
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError) {
       const error = new Error(ErrorMessages.TOKEN_EXPIRED)

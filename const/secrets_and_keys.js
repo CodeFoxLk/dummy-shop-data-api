@@ -1,1 +1,3 @@
-export const JWTSECRET = 'this#is@the&secret';
+import {JWTSECRET}  from '../config.js'
+
+export const JWTSECRETKEY = `${JWTSECRET}`

@@ -1,7 +1,13 @@
+
 import express from 'express'
 import  bodyParser from 'body-parser'
 import { connect } from 'mongoose'
 import { dirname }  from 'path'
+
+//environment variables configuratuiions
+import {MONGODB , PORT}  from './config.js'
+
+
 //header  - for CORS
 import corsHeader from './utils/cors_header.js'
 
@@ -13,6 +19,8 @@ import orderRouter from './routers/order_router.js'
 
 //utils and helpers
 import errorResponse from './utils/error_handlers/error_response.js'
+
+
 
 
 const app = express()
@@ -35,14 +43,13 @@ app.use(orderRouter)
 //errorHandler
 app.use(errorResponse)
 
-const uri =
-  'mongodb+srv://eshan_admin:sample_mongo_pw@cluster0.xzbpzq0.mongodb.net/shop?retryWrites=true&w=majority'
+const mongoURI = `${MONGODB}`
 
-connect(uri)
+connect(mongoURI)
   .then((r) => {
     //mongoose manage one connection behind the scene. it always provide same connection.
     //therefor we dont have to manage multiple connection creations
-    app.listen(3000)
+    app.listen(PORT)
     console.log('mongoose connected')
   })
   .catch((e) => console.log(e))
