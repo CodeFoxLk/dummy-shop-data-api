@@ -4,8 +4,8 @@ import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-d
 //dotenv.config({ path: process.env.NODE_ENV === 'production' ? './.env' : './dev.env' })
 dotenv.config({  })
 
-export const NODE_ENV = process.env.NODE_ENV
-export const HOST = process.env.HOST 
-export const PORT = process.env.PORT || 3000
+//export const NODE_ENV = process.env.NODE_ENV
+//export const HOST = process.env.HOST 
+export const PORT = process.env.PORT 
 export const MONGODB = process.env.MONGODB
 export const JWTSECRET = process.env.JWTSECRET

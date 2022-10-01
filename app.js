@@ -1,10 +1,10 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import helmet from 'helmet'
-import morgan from 'morgan'
-import fs from 'fs'
+// import morgan from 'morgan'
+// import fs from 'fs'
 import { connect } from 'mongoose'
-import path from 'path'
+// import path from 'path'
 
 //environment variables configuratuiions
 import { MONGODB, PORT } from './config.js'
@@ -37,14 +37,14 @@ app.use('/images', express.static('images'))
 //
 //
 // create a write stream (in append mode) for request logging
-var accessLogStream = fs.createWriteStream(
-  path.join(path.dirname('logs'), 'logs', 'log.log'),
-  {
-    flags: 'a'
-  }
-)
+// var accessLogStream = fs.createWriteStream(
+//   path.join(path.dirname('logs'), 'logs', 'log.log'),
+//   {
+//     flags: 'a'
+//   }
+// )
 // setup the logger
-app.use(morgan('combined', { stream: accessLogStream }))
+//app.use(morgan('combined', { stream: accessLogStream }))
 
 //
 //
