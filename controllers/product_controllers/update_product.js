@@ -2,9 +2,13 @@ import ProductModel from '../../models/products.js'
 import { promises } from 'fs'
 import { imageResize } from '../../utils/image_uploader.js'
 import { body } from 'express-validator'
-import { ErrorMessages, SuccessResponseMessages } from '../../const/response_messages.js'
+import {
+  ErrorMessages,
+  SuccessResponseMessages
+} from '../../const/response_messages.js'
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
+import responseData from '../../utils/response_message.js'
 
 export const updateProduct = async (req, res, next) => {
   const err = validationErrorHandler(req)
@@ -13,6 +17,7 @@ export const updateProduct = async (req, res, next) => {
   }
 
   const productId = req.params.productId
+  const userId = req.userId
 
   const updateProduct = {
     title: req.body.title,
@@ -26,10 +31,23 @@ export const updateProduct = async (req, res, next) => {
     keywords: req.body.keywords
   }
 
-  //const oldProduct = await ProductModel.findById(productId).exec()
+  const oldProduct = await ProductModel.findOne({
+    _id: productId,
+    createdBy: userId
+  }).exec()
+
+  if(!oldProduct){
+    return res.status(200).json(
+      responseData({
+        statusCode: 200,
+        message: SuccessResponseMessages.NO_PRODUCT_FOUD,
+      })
+    )
+  }
 
   // is if new image file available in the request
-  let imageAvailable = req.files ? true : false
+  let imageAvailable = req.files.length != 0 ? true : false
+  console.log(imageAvailable)
   if (imageAvailable) {
     const images = req.files.map((image) => {
       return image.path
@@ -43,30 +61,35 @@ export const updateProduct = async (req, res, next) => {
     }
   }
 
-  let oldProduct
+  let updatedProduct
   try {
-    // update product
-    oldProduct = await ProductModel.findByIdAndUpdate(
-      productId,
-      updateProduct,
-      { new: true }
-    ).exec()
-    res.status(200).json({
-      'message' : SuccessResponseMessages.UPDATE_SUCESS
-    })
+    // update product for the relavent user ID and productID
+    updatedProduct = await oldProduct
+      .updateOne(updateProduct, { new: true })
+      .exec()
+
+    res.status(200).json(
+      responseData({
+        statusCode: 200,
+        message: SuccessResponseMessages.SUCESS,
+        //data: updatedProduct
+      })
+    )
   } catch (e) {
     const error = mongooseErrorHandler(e)
     next(error)
   }
 
-  // remove old images
-  await _removeImage(oldProduct)
-  // remove old thumbnail
-  if (oldProduct.thumbNail != null) {
-    try {
-      await promises.unlink(oldProduct.thumbNail)
-    } catch (error) {
-      console.log(error)
+  // remove old images if new images are available
+  if (imageAvailable) {
+    await _removeImage(oldProduct)
+    // remove old thumbnail
+    if (oldProduct.thumbNail != null) {
+      try {
+        await promises.unlink(oldProduct.thumbNail)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

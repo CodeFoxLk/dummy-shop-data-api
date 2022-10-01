@@ -11,6 +11,7 @@ export async function createNewProduct(req, res, next) {
     return next(err)
   }
 
+ 
   let images = []
 
   if (!req.file && !req.files) {
@@ -25,7 +26,7 @@ export async function createNewProduct(req, res, next) {
   
   if (req.files) {
     imagePromises = req.files.map((image) => {
-      const resizedImagePath = imageResize(image, 500, 'product', true)
+      const resizedImagePath = imageResize(image, 850, 'product', true)
       return resizedImagePath
     })
 
@@ -45,7 +46,7 @@ export async function createNewProduct(req, res, next) {
     subCategory: req.body.sub_category,
     superCategory: req.body.super_category,
     keywords: req.body.keywords,
-    createdBy: req.body.userId,
+    createdBy: req.userId,
     reviews: [
       // {
       //   by: req.body.reviewby,

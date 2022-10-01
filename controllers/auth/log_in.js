@@ -40,7 +40,7 @@ export const login = async (req, res, next) => {
         userId: loadedUser._id.toString(),
       },
       JWTSECRETKEY,
-      { expiresIn: '1h' }
+      { expiresIn: '365d' }
     )
     
     res.status(200).json({token: token})

@@ -43,14 +43,14 @@ export const addReview = async (req, res, next) => {
       })
       .exec()
 
-      
-
     //    const productReviews = product.reviews
-    res.status(200).json(responseData({
-      statusCode : 200,
-      message : SuccessResponseMessages.REVIEW_ADDED,
-      //data : newReview
-    }))
+    res.status(201).json(
+      responseData({
+        statusCode: 201,
+        message: SuccessResponseMessages.REVIEW_ADDED
+        //data : newReview
+      })
+    )
   } catch (e) {
     const error = mongooseErrorHandler(e)
     return next(error)

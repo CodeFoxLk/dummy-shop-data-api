@@ -27,6 +27,7 @@ const fileFilter = (req, file, cb) => {
 }
 
 const resize = async (image, imageWidth, fileNamePrefix, deleteImage) => {
+  
   try {
     const resizedImage = 'images/product_images/' + fileNamePrefix + image.filename
     

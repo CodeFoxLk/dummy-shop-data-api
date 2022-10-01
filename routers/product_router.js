@@ -20,9 +20,9 @@ import isAuth from '../middlewares/is_auth.js'
 import { filterProducts } from '../controllers/product_controllers/filter_products.js'
 import { addReview, validateReview } from '../controllers/reviews/add_review.js'
 import { deleteReview } from '../controllers/reviews/delete_review.js'
+import { addNewCategory, validateCategory } from '../controllers/category/add_new_categories.js'
 
-//get All Categories
-router.get('/all_categories', getAllCategories)
+
 
 //get all producta
 router.get('/products', getAllValidations, getAllProducts)
@@ -34,6 +34,7 @@ router.get('/products/filter', getAllValidations, filterProducts)
 //body parser is not handling formdata. therefor we need to use multer im imageUploaded.
 router.put(
   '/update_product/:productId',
+  isAuth,
   imageUploader,
   productUpdateValidations,
   updateProduct
@@ -45,7 +46,7 @@ router.get('/product/:productId', singleProduct)
 //create a product
 router.post(
   '/create_product',
-
+  isAuth,
   imageUploader,
   productCreateValidations,
   createNewProduct
@@ -57,5 +58,10 @@ router.post('/product/review/:productId', isAuth, validateReview, addReview)
 router.delete('/product/:productId/delete_review/:reviewId', isAuth, deleteReview)
 //update productReview
 //router.put('/product/:productId/review/:reviewId', deleteReview)
+
+//get All Categories
+router.get('/all_categories', getAllCategories)
+//get All Categories
+router.get('/new_category', validateCategory, addNewCategory)
 
 export default router
