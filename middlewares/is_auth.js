@@ -22,6 +22,11 @@ export default async (req, res, next) => {
       error.statusCode = 401
       return next(error)
     }
+    if (err instanceof jwt.JsonWebTokenError) {
+      const error = new Error(err.message)
+      error.statusCode = 401
+      return next(error)
+    }
     err.statusCode = 500
     return next(err)
   }

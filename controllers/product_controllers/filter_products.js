@@ -68,6 +68,8 @@ export const filterProducts = async (req, res, next) => {
 }
 
 export const getAllValidations = [
+  query('greater_than_price').isNumeric(),
+  query('less_than_price').isNumeric(),
   query('page', ErrorMessages.INVALID_PAGE_NUMBER).customSanitizer(
     (value, { req }) => {
       if (isNaN(req.query.page)) {
