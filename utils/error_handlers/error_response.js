@@ -1,10 +1,11 @@
 const errorResponse = (error, req, res, next) => {
   console.log(error)
+  // console.log(req.status)
   const statusCode = error.statusCode || 500
   if (statusCode == 500 || !error.message) {
     error.message = 'Internal Server Error'
   }
-  res
+  return res
     .status(statusCode)
     .json({ statusCode: statusCode, message: error.message, errors: error.errors ?? [] })
 }

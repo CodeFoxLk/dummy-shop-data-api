@@ -40,7 +40,7 @@ export const getAllProducts = async (req, res, next) => {
 }
 
 export const getAllValidations = [
-  query('page', ErrorMessages.INVALID_PAGE_NUMBER).isNumeric().customSanitizer(
+  query('page', ErrorMessages.INVALID_PAGE_NUMBER).optional().isNumeric().customSanitizer(
     (value, { req }) => {
       if (isNaN(req.query.page)) {
         return 1 //If the page number is not a number
@@ -48,7 +48,7 @@ export const getAllValidations = [
       return req.query.page
     }
   ),
-  query('count', ErrorMessages.INVALID_PRODUCT_COUNT).isNumeric().customSanitizer(
+  query('count', ErrorMessages.INVALID_PRODUCT_COUNT).optional().isNumeric().customSanitizer(
     (value, { req }) => {
       if (isNaN(value)) {
         return 10 //If the maximum count is not a number,
