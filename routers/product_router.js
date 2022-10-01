@@ -17,7 +17,7 @@ import {
 } from '../controllers/product_controllers/update_product.js'
 
 import isAuth from '../middlewares/is_auth.js'
-import { filterProducts } from '../controllers/product_controllers/filter_products.js'
+import { filterProducts, getFilterValidations } from '../controllers/product_controllers/filter_products.js'
 import { addReview, validateReview } from '../controllers/reviews/add_review.js'
 import { deleteReview } from '../controllers/reviews/delete_review.js'
 import { addNewCategory, validateCategory } from '../controllers/category/add_new_categories.js'
@@ -28,7 +28,7 @@ import { addNewCategory, validateCategory } from '../controllers/category/add_ne
 router.get('/products', getAllValidations, getAllProducts)
 
 //get by category
-router.get('/products/filter', getAllValidations, filterProducts)
+router.get('/products/filter', getFilterValidations, filterProducts)
 
 //only for update product and handle form data
 //body parser is not handling formdata. therefor we need to use multer im imageUploaded.

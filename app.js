@@ -50,6 +50,7 @@ app.use('/images', express.static('images'))
 //
 //routes
 
+
 app.use(productRouter)
 app.use(authRouter)
 app.use(userRouter)
