@@ -22,6 +22,7 @@
 **PUT**
 -Update Product
 
+---
 
 #### **Categories**
 
@@ -31,6 +32,7 @@
 **GET**
 -New Category
 
+---
 
 #### **User**
 
@@ -43,6 +45,7 @@
 **GET**
 -User Profile
 
+---
 
 #### **Review**
 
@@ -52,6 +55,7 @@
 **DEL**
 -Delete Review
 
+---
 
 #### **Cart**
 **PUT**
@@ -63,6 +67,7 @@
 **DEL**
 -Delete Cart Item
 
+---
 
 #### **orders**
 **POST**
