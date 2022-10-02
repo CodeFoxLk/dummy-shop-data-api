@@ -3,7 +3,9 @@ import validationErrorHandler from '../../utils/error_handlers/validation_error_
 import Orders from '../../models/orders.js'
 import Products from '../../models/products.js'
 import { body, check } from 'express-validator'
-import { ErrorMessages } from '../../const/response_messages.js'
+import { ErrorMessages, SuccessResponseMessages } from '../../const/response_messages.js'
+import responseData from '../../utils/response_message.js'
+
 
 export const purchaseProducts = async (req, res, next) => {
   const products = req.body.products
@@ -16,10 +18,20 @@ export const purchaseProducts = async (req, res, next) => {
   }
 
   try {
-    const savedProducts = await Products.find({ _id: { $in: products } })
+    const savedProducts = await Products.find({ _id: { $in: products } }) // $in -> find from list of items
       .select('price discount')
       .lean()
       .exec()
+
+    if (savedProducts.length == 0) {
+      return res.status(404).json(
+        responseData({
+          statusCode: 404,
+          message: SuccessResponseMessages.NO_CART_PRODUCT_FOUD
+          //data : newReview
+        })
+      )
+    }
 
     savedProducts.forEach((p) => {
       p.product = p._id
@@ -34,7 +46,7 @@ export const purchaseProducts = async (req, res, next) => {
       address: address,
       mobileNumber: mobile
     })
-    const savedOrder = order.save()
+    const savedOrder = await order.save()
     res.status(200).json(order)
   } catch (e) {
     const error = mongooseErrorHandler(e)
@@ -43,13 +55,8 @@ export const purchaseProducts = async (req, res, next) => {
 }
 
 export const purchaseValidations = [
-  body('address')
-    .trim()
-    .notEmpty()
-    .isLength({ max: 400 }),
-  body('mobile_number', ErrorMessages.INVALID_MOBILE)
-    .trim()
-    .isMobilePhone()
+  body('address').trim().notEmpty().isLength({ max: 400 }),
+  body('mobile_number', ErrorMessages.INVALID_MOBILE).trim().isMobilePhone()
 
   // body('createdBy')
   //   .notEmpty()

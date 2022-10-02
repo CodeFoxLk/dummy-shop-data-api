@@ -1,5 +1,8 @@
 import CategoryModel from '../../models/categories.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
+import responseData from '../../utils/response_message.js'
+
+
 
 export const getAllCategories = async (req, res, next) => {
   try {

@@ -5,7 +5,10 @@ import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_hand
 const getProfile = async (req, res, next) => {
   const userId = req.userId
   try {
-    const user = await UserSchema.findById(userId).select('-__v').exec()
+    const user = await UserSchema.findById(userId)
+      .select('-__v -password')
+      .populate('cart.product')
+      .exec()
 
     res.status(200).json(user)
   } catch (e) {

@@ -15,11 +15,22 @@ export const addReview = async (req, res, next) => {
   }
   const productId = req.params.productId
   const userId = req.userId
-  const review = req.body.review
-  const userRating = req.body.rating
+  const userNewReview = req.body.review
+  const userNewRating = req.body.rating
 
   try {
     const product = await ProductModel.findById(productId).exec()
+
+    if(!product){
+      return res.status(404).json(
+        responseData({
+          statusCode: 404,
+          message: SuccessResponseMessages.NO_PRODUCT_FOUD
+          //data : newReview
+        })
+      )
+    }
+
     const reviews = product.reviews
     const reviewsCount = reviews.length
 
@@ -27,11 +38,11 @@ export const addReview = async (req, res, next) => {
       product.rating == null || product.rating == Infinity ? 0 : product.rating
     const sumOfAllCurrentRatings = currentProductRating * reviewsCount ?? 0
     const newproductRating =
-      (sumOfAllCurrentRatings + userRating) / (reviewsCount + 1)
+      (sumOfAllCurrentRatings + userNewRating) / (reviewsCount + 1)
     const newReview = {
       by: userId,
-      review: review,
-      rating: userRating
+      review: userNewReview,
+      rating: userNewRating
     }
 
     const updatedProduct = await product

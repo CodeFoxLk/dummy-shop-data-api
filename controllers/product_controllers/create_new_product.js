@@ -12,9 +12,9 @@ export async function createNewProduct(req, res, next) {
   }
 
  
-  let images = []
+  let resizedImages = []
 
-  if (!req.file && !req.files) {
+  if (!req.file && !req.files) { // if image files are available
     const err = new Error(ErrorMessages.IMAGES_NOT_PROVIDED)
     err.statusCode = 422
     return next(err)
@@ -30,14 +30,14 @@ export async function createNewProduct(req, res, next) {
       return resizedImagePath
     })
 
-    images = await Promise.all(imagePromises)
+    resizedImages = await Promise.all(imagePromises)
    
   }
 
   const product = new ProductModel({
     title: req.body.title,
     description: req.body.description,
-    images: images,
+    images: resizedImages,
     thumbNail: thumbnailPath,
     price: req.body.price,
     discount: req.body.discount,

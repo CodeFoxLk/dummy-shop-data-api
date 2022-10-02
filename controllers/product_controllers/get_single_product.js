@@ -10,10 +10,12 @@ export default async (req, res, next) => {
       .select('-__v')
       .lean()
       .exec()
-
+    
     res.status(200).json(prapareProduct(product))
   } catch (e) {
+    
     const error = mongooseErrorHandler(e)
+   
     return next(error)
   }
 }

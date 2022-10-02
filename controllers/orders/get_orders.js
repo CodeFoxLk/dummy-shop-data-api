@@ -2,22 +2,19 @@ import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_hand
 import validationErrorHandler from '../../utils/error_handlers/validation_error_handler.js'
 import Orders from '../../models/orders.js'
 
-
 const getRecentOrders = async (req, res, next) => {
-  
-
   const userId = req.userId
-  console.log(userId)
+
   try {
-    const savedProducts = await Orders.find({ user: userId })
+    const savedOrders = await Orders.find({ user: userId })
       .populate(
         'products.product',
-        'title images thumbnail description thumbNail rating'
+        'title images thumbnail description rating'
       )
       .lean()
       .exec()
 
-    res.status(200).json(savedProducts)
+    res.status(200).json(savedOrders)
   } catch (e) {
     const error = mongooseErrorHandler(e)
     return next(error)
@@ -25,4 +22,3 @@ const getRecentOrders = async (req, res, next) => {
 }
 
 export default getRecentOrders
-

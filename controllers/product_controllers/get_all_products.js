@@ -12,7 +12,7 @@ export const getAllProducts = async (req, res, next) => {
       return next(err)
     }
 
-    const productCount = await ProductModel.count().exec()
+   // const productCount = await ProductModel.count().exec()
     const page = parseInt(req.query.page || 1)
     const countPerPage = parseInt(req.query.count) // if 0, [const getAllValidations] will add a default count
 
@@ -39,7 +39,7 @@ export const getAllProducts = async (req, res, next) => {
   }
 }
 
-export const getAllValidations = [
+export const getAllProductsValidations = [
   query('page', ErrorMessages.INVALID_PAGE_NUMBER).customSanitizer(
     (value, { req }) => {
       if (isNaN(req.query.page)) {

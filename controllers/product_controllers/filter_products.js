@@ -12,7 +12,7 @@ export const filterProducts = async (req, res, next) => {
     filters.subCategory = req.query.sub_category
   }
   if (req.query.super_category) {
-    filters.super_category = req.query.super_category
+    filters.superCategory = req.query.super_category
   }
   if (req.query.less_than_price) {
     filters.price = { $lt: req.query.less_than_price }
@@ -25,9 +25,9 @@ export const filterProducts = async (req, res, next) => {
    // filters.keywords = { $in : req.query.search}
   }
 
-  console.log(filters)
-
+  
   const sortQuery = req.query.sort
+  console.log(filters)
 
   switch (sortQuery) {
     case 'latest':
@@ -68,8 +68,8 @@ export const filterProducts = async (req, res, next) => {
 }
 
 export const getFilterValidations = [
-  query('greater_than_price','greater_than_price invalid').isNumeric(),
-  query('less_than_price', 'less_than_price invalid').isNumeric(),
+  query('greater_than_price',ErrorMessages.INVALID_PRICE).optional().isNumeric(),
+  query('less_than_price', ErrorMessages.INVALID_PRICE).optional().isNumeric(),
   query('page', ErrorMessages.INVALID_PAGE_NUMBER).customSanitizer(
     (value, { req }) => {
       if (isNaN(req.query.page)) {

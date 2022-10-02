@@ -1,24 +1,27 @@
 const prapareProduct = (product) => {
-    const price = product.price;
-    const discount = product.discount;
+  if (!product) {
+    return {}
+  }
 
-    let sellingPrice = null
-    let saving = null
-    let isDiscountAvalable = false
+  const price = product.price
+  const discount = product.discount
 
-    if(discount || discount > 0 ){
-         sellingPrice = price * (1 - discount)
-         saving = price * discount
-         isDiscountAvalable = true
-    }
+  let sellingPrice = null
+  let saving = null
+  let isDiscountAvalable = false
 
-    product.sellingPrice = sellingPrice
-    product.saving = saving
-    product.isDiscountAvalable = isDiscountAvalable
+  if (discount || discount > 0) {
+    sellingPrice = price * (1 - discount)
+    saving = price * discount
+    isDiscountAvalable = true
+  }
 
-   
-    return product
+  // add custom new fields to product model
+  product.sellingPrice = sellingPrice
+  product.saving = saving
+  product.isDiscountAvalable = isDiscountAvalable
 
+  return product
 }
 
 export default prapareProduct

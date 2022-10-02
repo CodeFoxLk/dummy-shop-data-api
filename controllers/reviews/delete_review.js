@@ -7,7 +7,6 @@ export const deleteReview = async (req, res, next) => {
   const productId = req.params.productId
   const reviewId = req.params.reviewId
 
-  console.log(productId)
   try {
     const product = await ProductModel.findById(productId).exec()
     const reviews = product.reviews
@@ -15,8 +14,9 @@ export const deleteReview = async (req, res, next) => {
     let updatedrating
     if (product.rating) {
       const review = reviews.find((e) => e._id.toString() == reviewId)
+     
       if (review) {
-        updatedrating = product.rating - review.rating / product.reviews.length
+        updatedrating = product.rating - review.rating / (product.reviews.length - 1)
       }
     } else {
       updatedrating = 0

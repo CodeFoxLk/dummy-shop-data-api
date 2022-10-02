@@ -8,7 +8,7 @@ import { imageUploader } from '../utils/image_uploader.js'
 import singleProduct from '../controllers/product_controllers/get_single_product.js'
 import {
   getAllProducts,
-  getAllValidations
+  getAllProductsValidations
 } from '../controllers/product_controllers/get_all_products.js'
 import { getAllCategories } from '../controllers/category/get_all_categories.js'
 import {
@@ -25,32 +25,13 @@ import { addNewCategory, validateCategory } from '../controllers/category/add_ne
 
 
 //get all producta
-router.get('/products', getAllValidations, getAllProducts)
+router.get('/products', getAllProductsValidations, getAllProducts)
 
 //get by category
 router.get('/products/filter', getFilterValidations, filterProducts)
 
-//only for update product and handle form data
-//body parser is not handling formdata. therefor we need to use multer im imageUploaded.
-router.put(
-  '/update_product/:productId',
-  isAuth,
-  imageUploader,
-  productUpdateValidations,
-  updateProduct
-)
-
 //get a product
 router.get('/product/:productId', singleProduct)
-
-//create a product
-router.post(
-  '/create_product',
-  isAuth,
-  imageUploader,
-  productCreateValidations,
-  createNewProduct
-)
 
 //add productReview
 router.post('/product/review/:productId', isAuth, validateReview, addReview)
@@ -61,7 +42,34 @@ router.delete('/product/:productId/delete_review/:reviewId', isAuth, deleteRevie
 
 //get All Categories
 router.get('/all_categories', getAllCategories)
+
+
 //get All Categories
-router.get('/new_category', validateCategory, addNewCategory)
+// ------------- disabled in the public api , uncommented to use
+//router.get('/new_category', validateCategory, addNewCategory)
+
+
+//only for update product and handle form data
+//body parser is not handling formdata. therefor we need to use multer im imageUploaded.
+// ------------- disabled in the public api , uncommented to use
+// router.put(
+//   '/update_product/:productId',
+//   isAuth,
+//   imageUploader,
+//   productUpdateValidations,
+//   updateProduct
+// )
+
+
+//create a product
+// ------------- disabled in the public api , uncommented to use
+// router.post(
+//   '/create_product',
+//   isAuth,
+//   imageUploader,
+//   productCreateValidations,
+//   createNewProduct
+// )
+
 
 export default router

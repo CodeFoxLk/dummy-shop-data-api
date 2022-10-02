@@ -19,7 +19,21 @@ export const updateProduct = async (req, res, next) => {
   const productId = req.params.productId
   const userId = req.userId
 
-  const updateProduct = {
+  const oldProduct = await ProductModel.findOne({
+    _id: productId,
+    createdBy: userId
+  }).exec()
+
+  if (!oldProduct) {
+    return res.status(200).json(
+      responseData({
+        statusCode: 200,
+        message: SuccessResponseMessages.NO_PRODUCT_FOUD
+      })
+    )
+  }
+
+  const updatedProduct = {
     title: req.body.title,
     description: req.body.description,
     price: req.body.price,
@@ -31,47 +45,42 @@ export const updateProduct = async (req, res, next) => {
     keywords: req.body.keywords
   }
 
-  const oldProduct = await ProductModel.findOne({
-    _id: productId,
-    createdBy: userId
-  }).exec()
-
-  if(!oldProduct){
-    return res.status(200).json(
-      responseData({
-        statusCode: 200,
-        message: SuccessResponseMessages.NO_PRODUCT_FOUD,
-      })
-    )
-  }
-
   // is if new image file available in the request
-  let imageAvailable = req.files.length != 0 ? true : false
-  console.log(imageAvailable)
-  if (imageAvailable) {
+  let isNewImagesAvailable = req.files.length != 0 ? true : false
+
+  if (isNewImagesAvailable) {
     const images = req.files.map((image) => {
       return image.path
     })
     try {
-      const thumbnailPath = await imageResize(req.files[0], 250) // create thumbnail
-      updateProduct.images = images
-      updateProduct.thumbNail = thumbnailPath
+      const thumbnailPath = await imageResize(req.files[0], 250, 'thumbnail') // create thumbnail
+      updatedProduct.thumbNail = thumbnailPath
     } catch (error) {
       console.log(error)
     }
   }
 
-  let updatedProduct
+  let imagePromises = []
+  let resizedImages = []
+
+  if (isNewImagesAvailable) {
+    imagePromises = req.files.map((image) => {
+      const resizedImagePath = imageResize(image, 850, 'product', true)
+      return resizedImagePath
+    })
+
+    resizedImages = await Promise.all(imagePromises)
+    updatedProduct.images = resizedImages
+  }
+
   try {
     // update product for the relavent user ID and productID
-    updatedProduct = await oldProduct
-      .updateOne(updateProduct, { new: true })
-      .exec()
+    await oldProduct.updateOne(updatedProduct, { new: true }).exec()
 
     res.status(200).json(
       responseData({
         statusCode: 200,
-        message: SuccessResponseMessages.SUCESS,
+        message: SuccessResponseMessages.SUCESS
         //data: updatedProduct
       })
     )
@@ -81,7 +90,7 @@ export const updateProduct = async (req, res, next) => {
   }
 
   // remove old images if new images are available
-  if (imageAvailable) {
+  if (isNewImagesAvailable) {
     await _removeImage(oldProduct)
     // remove old thumbnail
     if (oldProduct.thumbNail != null) {

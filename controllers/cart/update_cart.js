@@ -1,22 +1,24 @@
 import { SuccessResponseMessages } from '../../const/response_messages.js'
-import UserSchema from '../../models/user.js'
+import UserModel from '../../models/user.js'
 import mongooseErrorHandler from '../../utils/error_handlers/mongoose_error_handler.js'
 import responseData from '../../utils/response_message.js'
 
 const updateCart = async (req, res, next) => {
   const userId = req.userId
-  let productList = req.body.productList
+  let newCartProductList = req.body.productList
+
   // productList = productList.map((product) => {
   //   product : product.productId
   //   qty : product.qty
   // })
 
-  const user = await UserSchema.findById(userId).exec()
-  const cart = [...user.cart]
+  const user = await UserModel.findById(userId).exec()
+  const userCurrentCart = [...user.cart]
 
-  if (cart.length == 0) { // if user have empty cart, no needs to update existing qty
+  if (userCurrentCart.length == 0) {
+    // if user have empty cart, no needs to update existing qty, directly save the cart
     const updatedUser = await user
-      .updateOne({ $set: { cart: productList } })
+      .updateOne({ $set: { cart: newCartProductList } })
       .exec()
     return res.status(201).json(
       responseData({
@@ -27,10 +29,11 @@ const updateCart = async (req, res, next) => {
   }
 
   // update quantities of existing products
-  for (let i = 0; i < cart.length; i++) {
-    const cartItem = cart[i] 
-    for (let crt = 0; crt < productList.length; crt++) {
-      const productItem = productList[crt]
+  for (let i = 0; i < userCurrentCart.length; i++) {
+    const cartItem = userCurrentCart[i]
+
+    for (let index = 0; index < newCartProductList.length; index++) {
+      const productItem = newCartProductList[index]
       if (cartItem.product.toString() == productItem.product) {
         cartItem.qty = productItem.qty
       }
@@ -38,11 +41,11 @@ const updateCart = async (req, res, next) => {
   }
 
   try {
-    await user.updateOne({ $set: { cart: cart } }).exec()
+    await user.updateOne({ $set: { cart: userCurrentCart } }).exec()
     res.status(201).json(
       responseData({
         statusCode: 201,
-        data: { message: SuccessResponseMessages.CART_UPDATED }
+        message: SuccessResponseMessages.CART_UPDATED
       })
     )
   } catch (e) {

@@ -11,7 +11,7 @@ export default async (req, res, next) => {
     return next(error)
   }
   const token = authHeader.split(' ')[1]
-  console.log(token)
+  
   let decodedToken
 
   try {
@@ -37,5 +37,6 @@ export default async (req, res, next) => {
   }
   req.userId = decodedToken.userId
   //req.userId = '631ccbb5b3d0f6d49a96f0b7'
+  console.log(token)
   next()
 }
