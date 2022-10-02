@@ -9,12 +9,16 @@
 
 **GET**
 -All Products
+
 **GET**
 -Single Product
+
 **GET**
 -Filtered Products
+
 **POST**
 -Create New Product
+
 **PUT**
 -Update Product
 
@@ -23,6 +27,7 @@
 
 **GET**
 -All Categories
+
 **GET**
 -New Category
 
@@ -31,8 +36,10 @@
 
 **POST**
 -Sign Up
+
 **POST**
 -Log In
+
 **GET**
 -User Profile
 
@@ -41,6 +48,7 @@
 
 **POST**
 -Add New Review
+
 **DEL**
 -Delete Review
 
@@ -48,8 +56,10 @@
 #### **Cart**
 **PUT**
 -Update Cart
+
 **GET**
 -Get Cart
+
 **DEL**
 -Delete Cart Item
 
@@ -57,5 +67,6 @@
 #### **orders**
 **POST**
 -Purchase Products
+
 **GET**
 -Get All Orders
