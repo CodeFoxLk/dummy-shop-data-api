@@ -75,3 +75,11 @@
 
 **GET**
 -Get All Orders
+
+---
+
+**FAKE DATA API**
+**JSON API**
+**SHOP API**
+**E COMMERCE API**
+
